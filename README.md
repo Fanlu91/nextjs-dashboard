@@ -120,6 +120,11 @@ With dynamic rendering, **your application is only as fast as your slowest data 
 
 By streaming, you can prevent slow data requests from blocking your whole page. 
 
+There are two ways you implement streaming in Next.js:
+
+1. At the page level, with the `loading.tsx` file.
+2. For specific components, with `<Suspense>`.
+
 ### Route Groups
 
 In the `app` directory, nested folders are normally mapped to URL paths. 
@@ -130,7 +135,65 @@ you can create a different layout for each group by adding a `layout.js` file in
 
 The naming of route groups has no special significance other than for organization. 
 
+### Suspense 
 
+Suspense allows you to defer rendering parts of your application until some condition is met (e.g. data is loaded).
+
+You can wrap your dynamic components in Suspense. Then, pass it a fallback component to show while the dynamic component loads.
+
+
+
+## Search and Pagination
+
+[Why use URL search params?](https://nextjs.org/learn/dashboard-app/adding-search-and-pagination#why-use-url-search-params)
+
+
+
+
+
+# From ChatGPT
+
+## use
+
+import { useSearchParams } from 'next/navigation'; 这里 use代表什么含义？ 我看到很多类似的用法，什么会带上use前缀？在next或者react里，还有没有类似用法的词
+
+
+
+在 Next.js 和 React 的世界中，以 `use` 开头的函数通常是指**钩子（Hooks）**。这是一种特殊的函数，它们让你能够“钩入”React 的功能。例如，`useState` 和 `useEffect` 是 React 中最常用的内置钩子。
+
+`useSearchParams` 是一个用于处理 URL 搜索参数的钩子。在 Next.js 中，它类似于 React Router 的钩子，允许你在函数组件中读取和操作 URL 的查询参数。
+
+这里的 `use` 前缀遵循了 React 钩子的命名惯例。React 的团队选择这种命名方式是为了帮助开发者区分钩子和普通的 JavaScript 函数。这种命名也有助于 React 在内部正确地处理钩子的行为。
+
+在 React 和 Next.js 中，你会遇到许多这样的钩子，例如：
+
+1. **useState**: 用于在函数组件中添加状态。
+2. **useEffect**: 用于处理副作用，如数据获取、订阅或手动更改 React 组件树之外的 DOM。
+3. **useContext**: 用于访问 React 的上下文（Context）系统。
+4. **useRef**: 用于持久化引用 DOM 元素或其他数据。
+5. **useReducer**: 用于处理更复杂的组件状态逻辑。
+6. **useCallback**: 用于记忆化回调函数。
+7. **useMemo**: 用于记忆化计算结果。
+
+这些钩子大大增强了函数组件的能力，让你能以更声明式的方式编写组件，同时保持组件逻辑的整洁和可维护性。
+
+
+
+在 Next.js 和 React 的生态系统中，除了以 `use` 开头的钩子（Hooks）外，还有一些其他常见的命名模式和前缀。这些命名模式在代码的可读性和组织结构方面起到了关键作用。以下是一些例子：
+
+1. **get** 前缀：通常用于表示获取数据或执行计算的函数。例如，在 Next.js 中，`getStaticProps` 和 `getServerSideProps` 是用于数据获取的函数。
+
+2. **is** 前缀：通常用于返回布尔值的函数，这些函数通常用来检查某种状态或条件。例如，`isLoading` 可能表示某个异步操作是否正在进行。
+
+3. **on** 前缀：常用于事件处理函数。例如，`onClick` 用于处理点击事件。
+
+4. **render** 前缀：有时用于组件或函数，这些组件或函数专门用于渲染界面部分。例如，`renderItem` 可能用于渲染列表的每个元素。
+
+5. **with** 前缀：通常用于高阶组件（HOCs）。例如，`withRouter` 是一个高阶组件，它将路由相关的 props 注入到一个组件中。
+
+6. **handle** 前缀：通常用于处理用户交互或某些事件的函数。例如，`handleSubmit` 用于处理表单提交。
+
+这些前缀不仅限于 Next.js 或 React，它们在整个 JavaScript 和前端开发领域都非常普遍。使用这些命名惯例可以帮助其他开发者更容易理解你的代码逻辑，同时也使得代码的意图更加明确。
 
 
 
