@@ -10,7 +10,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
   const { replace } = useRouter();
   
   const handleSearch = useDebouncedCallback((term) => {
-    console.log(term);
+    // console.log(term);
     const params = new URLSearchParams(searchParams);
     params.set('page', '1');
     if (term) {
@@ -21,6 +21,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
     // ${pathname} is the current path
     // replace(${pathname}?${params.toString()}) updates the URL with the user's search data
     // The URL is updated without reloading the page, thanks to Next.js's client-side navigation
+    // eg: invoices?page=1&query=tey
     replace(`${pathname}?${params.toString()}`);
   }, 300);
 

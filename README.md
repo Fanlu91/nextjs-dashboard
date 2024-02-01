@@ -145,9 +145,11 @@ You can wrap your dynamic components in Suspense. Then, pass it a fallback compo
 
 ## Search and Pagination
 
-[Why use URL search params?](https://nextjs.org/learn/dashboard-app/adding-search-and-pagination#why-use-url-search-params)
+benefits of implementing  search with URL params
 
-
+- Bookmarkable and Shareable URLs
+- Server-Side Rendering and Initial Load
+- Analytics and Tracking
 
 
 
@@ -196,6 +198,108 @@ import { useSearchParams } from 'next/navigation'; 这里 use代表什么含义�
 这些前缀不仅限于 Next.js 或 React，它们在整个 JavaScript 和前端开发领域都非常普遍。使用这些命名惯例可以帮助其他开发者更容易理解你的代码逻辑，同时也使得代码的意图更加明确。
 
 
+
+## component
+
+在Next.js中，组件可以根据运行环境被划分为**客户端组件**（Client Components）和**服务器端组件**（Server Components）。这种设计思想与Vue不同，在Vue中通常不区分组件的运行环境，而是通过生命周期钩子和特定的服务器端渲染指令来处理服务器端和客户端的逻辑。
+
+### 服务器端组件（Server Components）
+
+服务器端组件是在服务器上运行的React组件，它们在构建时或请求时执行，生成静态HTML或JSON来发送给客户端。服务器端组件的主要优点是能够直接访问服务器资源（如数据库），并且可以在发送给客户端之前完成数据获取和渲染的工作，从而提升性能和SEO优化。
+
+服务器端组件的特点：
+- **无客户端的JavaScript：** 这些组件不会发送JavaScript到客户端，因此不会影响页面加载时间。
+- **数据获取：** 可以直接在组件内部进行数据获取，而无需额外的客户端数据获取逻辑。
+- **访问服务器资源：** 可以安全地访问服务器资源，如数据库或内部API，而无需通过API路由公开这些资源。
+- **条件性客户端代码：** 可以根据需要将一部分逻辑保留在客户端执行，以实现动态交互。
+
+### 客户端组件（Client Components）
+
+客户端组件是在浏览器中运行的React组件，它们完全依赖于客户端的JavaScript来实现交互性。这类组件适用于需要与用户进行丰富交互的页面部分，比如表单处理、动画、或是与用户输入密切相关的功能。
+
+客户端组件的特点：
+- **完全交互性：** 依赖客户端JavaScript来实现动态交互。
+- **客户端状态管理：** 可以使用如React状态管理或其他状态管理库来处理状态。
+- **动态内容：** 适用于内容需要根据用户操作动态变化的场景。
+
+### 使用场景
+
+- **服务器端组件**：适用于静态内容展示、SEO优化页面、服务器端数据处理等场景。
+- **客户端组件**：适用于需要丰富用户交互、客户端状态管理、动态内容更新等场景。
+
+### 结合Vue的经验
+
+如果你有Vue的经验，可以将Next.js的服务器端组件看作是类似于Vue中的服务端渲染（SSR）组件，但它们在架构上更加灵活，允许你更细致地控制哪些部分在服务器上渲染，哪些部分在客户端渲染。客户端组件则类似于Vue中常规的单文件组件（SFC），依赖于客户端JavaScript来实现交互性。
+
+了解这些概念后，你可以根据应用的需求，结合服务器端和客户端组件的优点，设计出既快速又交互性强的Web应用。
+
+在Next.js中，根据组件的类型（客户端组件或服务器端组件），获取后端数据库中数据的方法会有所不同。这里我会分别介绍如何在两种组件中获取数据。
+
+### 服务器端组件获取数据
+
+在服务器端组件中，你可以直接在组件内部使用数据库查询来获取数据。这是因为服务器端组件在服务器上运行，可以直接访问服务器资源，包括数据库。你可以在组件的服务器端逻辑中进行数据库查询，并将查询结果作为props传递给组件渲染。
+
+这种方法的优点是可以在页面构建时（SSG）或请求时（SSR）获取最新的数据，而且不会暴露数据库访问逻辑给客户端，保持了安全性。
+
+#### 示例
+
+假设你正在使用Next.js的服务器端渲染功能（SSR）来获取数据，你可以在页面组件中使用`getServerSideProps`函数来获取数据库数据：
+
+```jsx
+// pages/posts.js
+import { getServerSideProps } from 'next'
+
+export async function getServerSideProps(context) {
+  const data = await fetchDataFromDatabase(); // 假设这是从数据库获取数据的函数
+  return {
+    props: { data }, // 将数据作为props传递给组件
+  }
+}
+
+export default function Posts({ data }) {
+  return (
+    // 使用数据渲染组件
+    <div>{data.map(post => <div key={post.id}>{post.title}</div>)}</div>
+  )
+}
+```
+
+### 客户端组件获取数据
+
+对于客户端组件，数据获取通常是通过客户端API请求来实现的。你可以在组件内使用诸如`fetch`或Axios这样的HTTP客户端来请求一个API端点，该端点负责与数据库交互并返回数据。
+
+客户端数据获取通常在组件的生命周期钩子中进行，如在React的`useEffect`钩子中，确保在组件加载时获取数据，并在数据到达时更新组件状态。
+
+#### 示例
+
+```jsx
+// components/ClientSidePosts.js
+import React, { useState, useEffect } from 'react';
+
+function ClientSidePosts() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/posts')
+      .then(response => response.json())
+      .then(data => setPosts(data))
+  }, []); // 空依赖数组表示这个effect只在组件挂载时运行一次
+
+  return (
+    <div>
+      {posts.map(post => <div key={post.id}>{post.title}</div>)}
+    </div>
+  );
+}
+
+export default ClientSidePosts;
+```
+
+在这个示例中，客户端组件通过调用`/api/posts`端点来获取数据。这个端点需要你在`pages/api`目录下创建相应的API路由，该路由处理数据库查询并返回数据。
+
+### 结论
+
+选择服务器端组件还是客户端组件获取数据，取决于你的具体需求，比如是否需要SEO、数据的实时性要求、以及用户交互的复杂度等。服务器端组件更适合静态内容和SEO优化，而客户端组件适合动态交互和实时数据更新的场景。
 
 
 
