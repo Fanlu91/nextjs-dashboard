@@ -143,7 +143,7 @@ You can wrap your dynamic components in Suspense. Then, pass it a fallback compo
 
 
 
-## Search and Pagination
+### Search and Pagination
 
 benefits of implementing  search with URL params
 
@@ -153,7 +153,29 @@ benefits of implementing  search with URL params
 
 
 
-# From ChatGPT
+## React Server
+
+React Server Actions allow you to run asynchronous code directly on the server，which can be invoked from your Client or Server Components.
+
+In React, you can use the `action` attribute in the `form` element to invoke actions. The action will automatically receive the native [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) object, containing the captured data.
+
+
+
+Server Action 在 Server Component 中的工作原理主要基于以下几个方面：
+
+1. **服务器端渲染（SSR）**：在 Next.js 中，Server Components 是在服务器端渲染的。这意味着当一个请求到达服务器时，服务器会处理该请求，并生成相应的 HTML 内容，然后发送回客户端。这个过程不依赖于客户端的 JavaScript。
+
+2. **处理表单和交互**：Server Action 允许在服务器端处理表单提交和其他交互。例如，当用户提交一个表单时，即使客户端 JavaScript 被禁用，表单的数据也会被发送到服务器。服务器接收这些数据，执行必要的操作（如验证、数据库更新等），然后可以返回新的 HTML 页面或重定向到另一个页面。
+
+3. **渐进增强**：虽然 Server Components 和 Server Actions 的核心功能是在没有客户端 JavaScript 的情况下正常工作的，但这并不意味着不能使用客户端 JavaScript 来增强体验。当 JavaScript 可用时，你可以利用它来添加额外的交互性和动态功能，如客户端验证、动态内容加载等。这种方法确保了在基本级别上的可用性和功能性，同时允许在更现代的浏览器中提供更丰富的体验。
+
+4. **回退机制**：在客户端 JavaScript 可用的情况下，某些交互可能会转移到客户端处理（例如，通过客户端路由）。但是，如果 JavaScript 被禁用或失败，这些交互会自然地回退到服务器端处理，确保了应用的基本功能仍然可用。
+
+通过这种结合服务器端渲染和适当的客户端 JavaScript 使用的方法，Next.js 的 Server Actions 在 Server Components 中提供了一个强大且灵活的框架，以支持广泛的用户和浏览环境。
+
+
+
+# Other from ChatGPT
 
 ## use
 
